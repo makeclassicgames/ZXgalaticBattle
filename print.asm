@@ -46,10 +46,13 @@ rst $10
 ret
 ;Rutina imprimir nave
 printShip:
-ld a,$07
-call ink
-ld bc,(shippos)
-call at
-ld a,SHIP_GRAPH
-rst $10
+ld      a, $07          ; Carga en A la tinta blanca
+call    ink             ; Llama al cambio de tinta
+
+ld      bc, (shipPos)   ; Carga en BC la posición actual de la nave
+call    at              ; Llama a posicionar el cursor
+
+ld      a, SHIP_GRAPH   ; Carga en A el carácter de la nave
+rst     $10             ; La pinta
+
 ret

@@ -217,5 +217,5 @@ db $4e, $fa, $76, $7e, $da, $b7, $ff, $07	; $a2 Rigth/Down
 
 ;Variables de posicion
 ;posicion nave
-shippos:
+shipPos:
 dw $0511

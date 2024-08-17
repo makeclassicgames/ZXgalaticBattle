@@ -1,6 +1,6 @@
 ;rutina movimiento nave
 moveShip:
-ld bc,(shippos)
+ld bc,(shipPos)
 bit $01,d
 jr nz, moveShip_right
 bit $00,d
@@ -12,7 +12,7 @@ sub c
 ret z
 call deleteChar
 inc c
-ld (shippos),bc
+ld (shipPos),bc
 jr moveShip_print
 
 moveShip_right:
@@ -21,7 +21,7 @@ sub c
 ret z
 call deleteChar
 dec c
-ld (shippos),bc
+ld (shipPos),bc
 moveShip_print:
 call printShip
 ret
