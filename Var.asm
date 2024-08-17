@@ -214,3 +214,8 @@ db $e0, $ff, $ed, $5b, $7e, $6e, $5f, $72	; $9f Left/Up
 db $07, $ff, $b7, $da, $7e, $76, $fa, $4e	; $a0 Rigth/Up
 db $72, $5f, $6e, $7e, $5b, $ed, $ff, $e0	; $a1 Left/Down
 db $4e, $fa, $76, $7e, $da, $b7, $ff, $07	; $a2 Rigth/Down
+
+;Variables de posicion
+;posicion nave
+shippos:
+dw $0511

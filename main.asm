@@ -16,7 +16,10 @@ or $07
 ld (BORDCR),a
 call PrintFrame
 call printInfoGame
+call printShip
 main_loop:
+call checkCtrl
+call moveShip
 jr main_loop
 ret
 
@@ -24,4 +27,6 @@ include "Const.asm"
 include "Var.asm"
 include "graph.asm"
 include "print.asm"
+include "ctrl.asm"
+include "game.asm"
 end main

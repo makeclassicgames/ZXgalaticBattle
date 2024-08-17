@@ -1,3 +1,21 @@
+;funcion de posicionamiento (registros B (x) y C (y))
+at:
+push bc
+exx
+pop bc
+call $0a23 ;Rutina ROM de posicionamiento de rom
+exx
+ret
+;Rutina de cambio de tinta
+ink:
+exx
+ld b,a 
+ld a,(ATTR_T)
+and $f8
+or b
+ld (ATTR_T),a
+exx
+ret
 LoadUdgsEnemies: ; rutina de carga de nivel
 dec a
 ld h,$00
