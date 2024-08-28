@@ -1,3 +1,18 @@
+;info Game
+infoGame:
+db $10,$03,$16,$00,$00
+db 'Vidas   Puntos  nivel   Enemigos'
+infoGame_end:
+;;Screen Frames
+;Upper Frame
+frameTopGraph:
+db $16, $00, $00, $10, $01
+db $96, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $98
+frameBottomGraph:
+db $16, $14, $00
+db $9b, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9d
+frameEnd:
+
 udgsCommon:
 db $24, $42, $99, $bd, $ff, $18, $24, $5a	; $90 Nave
 db $00, $18, $24, $5a, $5a, $24, $18, $00	; $91 Disparo
@@ -200,3 +215,8 @@ db $e0, $ff, $ed, $5b, $7e, $6e, $5f, $72	; $9f Left/Up
 db $07, $ff, $b7, $da, $7e, $76, $fa, $4e	; $a0 Rigth/Up
 db $72, $5f, $6e, $7e, $5b, $ed, $ff, $e0	; $a1 Left/Down
 db $4e, $fa, $76, $7e, $da, $b7, $ff, $07	; $a2 Rigth/Down
+
+;variables de posicion
+;posicion nave
+shipPos:
+dw $0511

@@ -1,43 +1,38 @@
 ORG $5dad; compatible with 16K
 
-main:
-ld a,$02
-CALL OPENCHAN
-ld hl, udgsCommon
-ld (UDG),hl
-ld a,$90
-ld b,$0f
-Loop:
-push af
-rst $10
-pop af
-inc a
-djnz Loop
-ld a,$01
-ld b,$1e
-Loop2:
-push af
-push bc
-call LoadUdgsEnemies
-ld a,$9f
-rst $10
-ld a, $a0
-rst $10
-ld a,$a1
-rst $10
-ld a,$a2
-rst $10
-pop bc
-pop af
-djnz Loop2
-ld hl,Cadena
-ld b,cadena_fin - Cadena
-call PrintString
+Main:
+ld      a, $02 ; Cambio modo activo pantalla
+call    OPENCHAN ; llamada a openchan
+
+ld      hl, udgsCommon ; carga de los gráficos
+ld      (UDG), hl ; carga en UDG
+
+ld      hl, ATTR_P ; cargar variable sistema para borde
+ld      (hl), $07 ; cambio color
+call    CLS; borrado pantalla
+
+xor     a ; cambio de color de borde
+out     ($fe), a ;llamada a pantalla (puerto)
+ld      a, (BORDCR) ; carga del valor del borde a la pantalla
+and     $c7
+or      $07
+ld      (BORDCR), a; cambio color borde
+
+call    PrintFrame ;llamada para imprimir borde
+call    printInfoGame ; llamada para imprimir informacion juego
+call    printShip ; imprimir nave
+
+Main_loop:
+call    checkCtrl ; comprobar controles
+call    moveShip ; mover nave
+jr      Main_loop ; bucle principal
 ret
-Cadena: db $16,$0a,$0a,'Hola Mundo'
-cadena_fin: db $
+
+;Incluir ficheros
 include "Const.asm"
 include "Var.asm"
 include "graph.asm"
 include "print.asm"
-end main
+include "ctrl.asm"
+include "game.asm"
+end Main
