@@ -22,3 +22,7 @@ SHIP_GRAPH: EQU $90 ; Gráfico nave
 SHIP_INI: EQU $0511 ; Posicion inicial nave (x,y)
 SHIP_TOP_L: EQU $1e ; esquina superior izquierda nave
 SHIP_TOP_R: EQU $01 ; esquina superior derechanave
+
+;Codigo de caracter del disparo
+FIRE_GRAPH: EQU $91
+FIRE_TOP_T: EQU COR_Y

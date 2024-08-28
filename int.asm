@@ -1,0 +1,17 @@
+org $7e5c
+
+isr:
+push hl
+push de
+push bc
+push af
+ld hl,$5dad
+set $00,(hl)
+
+isr_end:
+pop af
+pop bc
+pop de
+pop hl
+ei
+reti

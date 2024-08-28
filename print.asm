@@ -52,3 +52,13 @@ call at
 ld a, SHIP_GRAPH
 rst $10
 ret
+
+;Dibuja el disparo
+printFire:
+ld a,$02
+call ink
+ld bc,(firePos)
+call at
+ld a, FIRE_GRAPH
+rst $10
+ret

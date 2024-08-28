@@ -1,3 +1,4 @@
+
 ;info Game
 infoGame:
 db $10,$03,$16,$00,$00
@@ -220,3 +221,5 @@ db $4e, $fa, $76, $7e, $da, $b7, $ff, $07	; $a2 Rigth/Down
 ;posicion nave
 shipPos:
 dw $0511
+firePos:
+dw $0000
