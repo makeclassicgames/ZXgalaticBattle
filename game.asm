@@ -1,62 +1,3 @@
-;rutina movimiento nave
-moveShip:
-ld hl,flags
-bit $00,(hl)
-ret z
-res $00,(hl)
-;carga de la nave
-ld bc,(shipPos)
-bit $01,d
-jr nz, moveShip_right
-bit $00,d
-ret z
-;Mover nave a la derecha
-moveShip_left:
-ld a,SHIP_TOP_L+$01
-sub c
-ret z
-call deleteChar
-inc c
-ld (shipPos),bc
-jr moveShip_print
-;mover nave a la izquierda
-moveShip_right:
-ld a,SHIP_TOP_R+$01
-sub c
-ret z
-call deleteChar
-dec c
-ld (shipPos),bc
-;mostrar nave
-moveShip_print:
-call printShip
-ret
-
-;Mover disparo
-moveFire:
-ld hl,flags
-bit $01,(hl)
-jr nz,moveFire_try
-bit $02,d
-ret z
-set $01,(hl)
-ld bc,(shipPos)
-inc b
-jr moveFire_print
-moveFire_try:
-ld bc,(firePos)
-call deleteChar
-inc b
-ld a,FIRE_TOP_T
-sub b
-jr nz,moveFire_print
-ret
-
-moveFire_print:
-ld (firePos),bc
-call printFire
-ret
-
 ; -----------------------------------------------------------------------------
 ; Mueve los enemigos.
 ;
@@ -86,7 +27,7 @@ ld      a, (hl)             ; Carga el valor en A
 and     $1f                 ; Se queda con la coordeanda X
 ld      c, a                ; Carga el valor en C
 
-call    deleteChar          ; Borra el enemigo
+call    DeleteChar          ; Borra el enemigo
 
 pop     hl                  ; Recupera el valor de HL
 
@@ -166,6 +107,81 @@ dec     d                   ; Decrementa D
 jr      nz, moveEnemies_loop    ; Hasta que D sea cero (20 enemigos)
 
 moveEnemies_end:
-call    printEnemies        ; Pinta los enemigos
+call    PrintEnemies        ; Pinta los enemigos
+
+ret
+
+; ----------------------------------------------------------------------------
+; Mueve el disparo
+;
+; Entrada:  D -> Estado de los controles
+; Altera el valor de los registros AF, BC y HL.
+; ----------------------------------------------------------------------------
+MoveFire:
+ld      hl, flags           ; Carga en HL la dirección de memoria de flags
+bit     $01, (hl)           ; Evalúa si el bit del disparo está activo
+jr      nz, moveFire_try    ; Si está activo, salta
+bit     $02, d              ; Evalúa si el control de disparo está activo
+ret     z                   ; Si no está activo, sale
+set     $01, (hl)           ; Activa el bit del disparo en flags
+ld      bc, (shipPos)       ; Carga la posición actual de la nave en HL
+inc     b                   ; Apunta a la línea superior
+jr      moveFire_print      ; Salta a pintar el diparo
+
+moveFire_try:
+ld      bc, (firePos)       ; Carga en BC la posición actual del disparo
+call    DeleteChar          ; Borra el disparo
+inc     b                   ; Apunta B a la línea superior
+ld      a, FIRE_TOP_T       ; Carga en A el tope superior del disparo
+sub     b                   ; Le restamos coordenada Y del disparo
+jr      nz, moveFire_print  ; Si son distintos, no ha llegado al tope, salta
+res     $01, (hl)           ; Desactiva el disparo
+
+ret
+
+moveFire_print:
+ld      (firePos), bc       ; Actualiza la posición del disparo
+call    PrintFire           ; Pinta el disparo
+
+ret
+
+; -----------------------------------------------------------------------------
+; Mueve la nave
+;
+; Entrada:  D -> Estado de los controles
+; Altera el valor de los registros AF y BC
+; -----------------------------------------------------------------------------
+MoveShip:
+ld      hl, flags           ; Cargamos la dirección de memoria de flags en HL
+bit     $00, (hl)           ; Comprueba si el bit 0 está activo
+ret     z                   ; Si no es así, sale                
+res     $00, (hl)           ; Desactiva el bit 0 de flags
+
+ld      bc, (shipPos)       ; Carga la posición actual de la nave en BC
+bit     $01, d              ; Comprueba si el control derecha viene activo
+jr      nz, moveShip_right  ; En cuyo caso, salta
+
+bit     $00, d              ; Comprueba si el control izquierda viene activo
+ret     z                   ; Si no es así, sale
+
+moveShip_left:
+ld      a, SHIP_TOP_L + $01 ; Carga en A el tope para la nave por la izquierda
+sub     c                   ; Le resta la columna actual de la nave
+ret     z                   ; Si es la misma columna, sale
+call    DeleteChar          ; Borra la nave de la posición actual
+inc     c                   ; Apunta C a la columna a la izquierda a la actual
+ld      (shipPos), bc       ; Actualiza la posición de la nave
+jr      moveShip_print      ; Salta al final de la rutina
+
+moveShip_right:
+ld      a, SHIP_TOP_R + $01 ; Carga en A el tope para la nave por la derecha
+sub     c                   ; Le resta la columna actual de la nave
+ret     z                   ; Si es la misma columna, sale
+call    DeleteChar          ; Borra la nave de la posición actual
+dec     c                   ; Apunta C a la culumna a la derecha a la actual
+ld      (shipPos), bc        ; Actualiza la posición de la nave
+
+moveShip_print:
+call    PrintShip           ; Pintamos la nave
 
 ret

@@ -24,4 +24,5 @@ pop     de
 pop     hl
 ei
 reti
+
 countEnemy: db $00

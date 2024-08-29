@@ -27,8 +27,8 @@ SHIP_TOP_R: EQU $01 ; esquina superior derechanave
 FIRE_GRAPH: EQU $91
 FIRE_TOP_T: EQU COR_Y
 
-;topes enemigos
-ENEMY_TOP_T: EQU COR_Y - MIN_Y
-ENEMY_TOP_B: EQU COR_Y - MAX_Y+$01
-ENEMY_TOP_L: EQU COR_X - MIN_X
-ENEMY_TOP_R: EQU COR_X - MAX_X
+; Topes de los enemigos
+ENEMY_TOP_T:   EQU COR_Y - MIN_Y
+ENEMY_TOP_B:   EQU COR_Y - MAX_Y + $01
+ENEMY_TOP_L:   EQU COR_X - MIN_X
+ENEMY_TOP_R:   EQU COR_X - MAX_X
