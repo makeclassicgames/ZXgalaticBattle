@@ -62,3 +62,55 @@ call at
 ld a, FIRE_GRAPH
 rst $10
 ret
+
+; -----------------------------------------------------------------------------
+; Pinta los enemigos
+;
+; Altera el valor de los registros AF, BC, D y HL.
+; -----------------------------------------------------------------------------
+printEnemies:
+ld      a, $06                      ; Carga en A la tinta amarilla        
+call    ink                         ; Cambia la tinta
+
+ld      hl, enemiesConfig           ; Carga la dirección de la configuración 
+                                    ; del enemigo en HL
+ld      d, $14                      ; Carga en D 20 enemigos
+
+printEnemies_loop:
+bit     $07, (hl)                   ; Evalúa si el enemigo está activo
+jr      z, printEnemies_endLoop     ; Si no lo está, salta
+
+push    hl                          ; Preserva el valor de HL
+
+ld      a, (hl)                     ; Carga el primer byte de configuración en A
+and     $1f                         ; Se queda con la coordenda Y
+ld      b, a                        ; La carga en B
+
+inc     hl                          ; Apunta HL al segundo byte
+ld      a, (hl)                     ; Carga el valor en A
+and     $1f                         ; Se queda con la coordenada X
+ld      c, a                        ; La carga en C
+call    at                          ; Posiciona el cursor
+
+ld      a, (hl)                     ; Vuelve a cargar el segudo byte en A
+and     $c0                         ; Se queda con la dirección (izquierda ...)
+rlca                                ; Pone el valor en los bits 0 y 1
+rlca
+ld      c, a                        ; Carga el valor en C
+ld      b, $00                      ; Pone B a cero
+
+ld      hl, enemiesGraph            ; Carga en HL el carácter del gráfico del enemigo
+add     hl, bc                      ; Le suma la dirección de enemigo (izquierda ...)
+ld      a, (hl)                     ; Carga en A el gráfico del enemigo
+rst     $10                         ; Lo pinta
+
+pop      hl                         ; Recupera el valor de HL
+
+printEnemies_endLoop:
+inc     hl                          ; Apunta HL al primer byte de la configuración
+inc     hl                          ; del enemigo siguientes
+
+dec     d                           ; Decrementa D
+jr      nz, printEnemies_loop       ; hasta que D sea 0
+
+ret

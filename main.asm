@@ -1,7 +1,7 @@
 ORG $5dad; compatible with 16K
-;Flags variable
+;Flags variable (1 para disparo activo)
 flags:
-db $00
+db $01
 Main:
 ld      a, $02 ; Cambio modo activo pantalla
 call    OPENCHAN ; llamada a openchan
@@ -30,10 +30,15 @@ ld i,a
 im 2
 ei
 
+ld a,$01
+call LoadUdgsEnemies
+call printEnemies
+
 Main_loop:
 call    checkCtrl ; comprobar controles
 call    moveFire; mover disparo
 call    moveShip ; mover nave
+call    MoveEnemies ;moverEnemigos
 jr      Main_loop ; bucle principal
 ret
 
