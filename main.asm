@@ -38,17 +38,28 @@ ld      i, a
 im      2
 ei
 
-ld      a, $01
 call    LoadUdgsEnemies
 call    PrintEnemies
 
 Main_loop:
 call    CheckCtrl
 call    MoveFire
+push de
+call    CheckCrashFire
+pop de
+ld a, (enemiesCounter)
+or a
+jr z, Main_restart
+
 call    MoveShip
 call    MoveEnemies
 jr      Main_loop
-      
+
+Main_restart:
+call changeLevel
+call checkCrashShip
+jr Main_loop
+
 include "Const.asm"
 include "Var.asm"
 include "graph.asm"

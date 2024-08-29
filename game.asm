@@ -185,3 +185,89 @@ moveShip_print:
 call    PrintShip           ; Pintamos la nave
 
 ret
+
+CheckCrashFire:
+ld a,(flags)
+and $02
+ret z
+ld de,(firePos)
+ld hl, enemiesConfig
+ld b, enemiesConfigEnd-enemiesConfigIni
+sra b
+CheckCrashFire_loop:
+ld a,(hl)
+inc hl
+bit $07,a
+jr z, CheckCrashFire_endLoop
+and $1f
+cp d
+jr nz, CheckCrashFire_endLoop
+ld a,(hl)
+and $1f
+cp e
+jr nz, CheckCrashFire_endLoop
+dec hl
+res $07, (hl)
+ld b,d
+ld c,e
+call DeleteChar
+ld hl,enemiesCounter
+dec (hl)
+ret
+CheckCrashFire_endLoop:
+inc hl
+djnz CheckCrashFire_loop
+
+ret
+
+;change level
+changeLevel:
+ld a,(levelCounter)
+inc a
+cp $1f
+jr c, changeLevel_end
+ld a, $01
+
+changeLevel_end:
+ld (levelCounter),a
+call LoadUdgsEnemies
+ld a,$14
+ld (enemiesCounter),a
+ld hl,enemiesConfigIni
+ld de, enemiesConfig
+ld bc, enemiesConfigEnd-enemiesConfigIni
+ldir
+
+ret
+
+;checkCrash Ship
+
+checkCrashShip:
+
+ld de,(shipPos)
+ld hl, enemiesConfig
+ld h, enemiesConfigEnd-enemiesConfigIni
+sra b
+checkCrashShip_loop:
+ld a,(hl)
+inc hl
+bit $07,a
+jr z, checkCrashShip_Endloop
+and $1f
+cp d
+jr nz, checkCrashShip_Endloop
+ld a,(hl)
+and $1f
+cp e
+jr nz, checkCrashShip_Endloop
+dec hl
+res $07,(hl)
+ld hl, enemiesCounter
+dec (hl)
+jp PrintExplosion
+checkCrashShip_Endloop:
+inc hl
+
+djnz checkCrashShip_loop
+
+ret

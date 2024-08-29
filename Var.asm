@@ -6,6 +6,13 @@ db  $10, $03, $16, $00, $00
 db 'Vidas   Puntos   Nivel  Enemigos'
 infoGame_end:
 
+;------------------------------------------------------------------------------
+; Informacion partida
+enemiesCounter:
+db $14
+levelCounter:
+db $01
+
 ; -----------------------------------------------------------------------------
 ; Declaraciones de los gráficos de los distintos personajes
 ; y la configuración de coordenadas (Y, X)

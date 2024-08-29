@@ -159,3 +159,23 @@ inc     hl              ; Apunta HL al siguiente carácter
 djnz    PrintString     ; Hasta que B valga 0
 
 ret
+
+PrintExplosion:
+ld a,$02
+call Ink
+
+ld bc,(shipPos)
+ld d,$04
+ld e,$92
+PrintExplosion_loop:
+call At
+ld a,e
+rst $10
+halt
+halt
+halt
+halt
+inc e
+dec d
+jr nz, PrintExplosion_loop
+jp PrintShip

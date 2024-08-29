@@ -22,6 +22,7 @@ ret
 ; Altera el valor de los registros A, BC, DE y HL
 ; -----------------------------------------------------------------------------
 LoadUdgsEnemies:
+ld      a, (levelCounter)       ; Carga del contador de nivel
 dec     a                       ; Decrementa A para que no sume un nivel de más
 ld      h, $00                  
 ld      l, a                    ; Carga en HL el nivel
