@@ -1,5 +1,6 @@
 ORG $5dad; compatible with 16K
-
+flags:
+db $00
 Main:
 ld      a, $02 ; Cambio modo activo pantalla
 call    OPENCHAN ; llamada a openchan
@@ -22,8 +23,16 @@ call    PrintFrame ;llamada para imprimir borde
 call    printInfoGame ; llamada para imprimir informacion juego
 call    printShip ; imprimir nave
 
+; activar el modo interrupcion
+di
+ld a,$20
+ld i,a
+im 2
+ei
+
 Main_loop:
 call    checkCtrl ; comprobar controles
+call    moveFire ; Mover Disparo
 call    moveShip ; mover nave
 jr      Main_loop ; bucle principal
 ret

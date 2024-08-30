@@ -220,3 +220,7 @@ db $4e, $fa, $76, $7e, $da, $b7, $ff, $07	; $a2 Rigth/Down
 ;posicion nave
 shipPos:
 dw $0511
+
+;posicion disparo
+firePos:
+dw $0000
