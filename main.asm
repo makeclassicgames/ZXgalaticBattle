@@ -1,47 +1,83 @@
-ORG $5dad; compatible with 16K
+org     $5dad
+
+; -----------------------------------------------------------------------------
+; Indicadores
+;
+; Bit 0 -> se debe mover la nave            0 = No, 1 = Sí
+; Bit 1 -> el disparo está activo           0 = No, 1 = Sí
+; Bit 2 -> se deben mover los enemigos      0 = No, 1 = Sí
+; -----------------------------------------------------------------------------
 flags:
 db $00
+
+;programa principal
 Main:
-ld      a, $02 ; Cambio modo activo pantalla
-call    OPENCHAN ; llamada a openchan
+;modo pantalla y carga de elementos
+ld      a, $02
+call    OPENCHAN
 
-ld      hl, udgsCommon ; carga de los gráficos
-ld      (UDG), hl ; carga en UDG
+ld      hl, udgsCommon
+ld      (UDG), hl
 
-ld      hl, ATTR_P ; cargar variable sistema para borde
-ld      (hl), $07 ; cambio color
-call    CLS; borrado pantalla
-
-xor     a ; cambio de color de borde
-out     ($fe), a ;llamada a pantalla (puerto)
-ld      a, (BORDCR) ; carga del valor del borde a la pantalla
+;borrado de pantalla y pintado a negro
+ld      hl, ATTR_P
+ld      (hl), $07
+call    CLS
+; pintar borde de la pantalla
+xor     a
+out     ($fe), a
+ld      a, (BORDCR)
 and     $c7
 or      $07
-ld      (BORDCR), a; cambio color borde
+ld      (BORDCR), a
 
-call    PrintFrame ;llamada para imprimir borde
-call    printInfoGame ; llamada para imprimir informacion juego
-call    printShip ; imprimir nave
+; pintar frame y nave
+call    PrintFrame
+call    PrintInfoGame
+call    PrintShip
 
-; activar el modo interrupcion
+;activar las interrupciones
 di
-ld a,$20
-ld i,a
-im 2
+ld      a, $28
+ld      i, a
+im      2
 ei
 
-Main_loop:
-call    checkCtrl ; comprobar controles
-call    moveFire ; Mover Disparo
-call    moveShip ; mover nave
-jr      Main_loop ; bucle principal
-ret
+;cargamos los enemigos y los pintamos
+call    LoadUdgsEnemies
+call    PrintEnemies
 
-;Incluir ficheros
+;bucle principal
+Main_loop:
+
+call    CheckCtrl   ;comprobar teclas
+call    MoveFire    ; mover disparo
+;almacenar registro de
+push de
+call    CheckCrashFire  ;comprobar colisiones disparo y enemigos
+pop de
+
+ld a, (enemiesCounter) ;carga contador enemigos
+or a    ;or a=a si es 0 actualizara F
+jr z, Main_restart  ; si es 0 se reinicia la pantalla
+
+;mover la nave y enemigos
+call    MoveShip
+call    MoveEnemies
+call    checkCrashShip ; comprobar colision nave
+jr      Main_loop
+
+;reinicio de pantalla
+Main_restart:
+call changeLevel    ;cambiar al siguiente nivel
+
+jr Main_loop
+
 include "Const.asm"
 include "Var.asm"
 include "graph.asm"
 include "print.asm"
 include "ctrl.asm"
 include "game.asm"
-end Main
+
+end     Main

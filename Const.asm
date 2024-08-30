@@ -23,5 +23,12 @@ SHIP_INI: EQU $0511 ; Posicion inicial nave (x,y)
 SHIP_TOP_L: EQU $1e ; esquina superior izquierda nave
 SHIP_TOP_R: EQU $01 ; esquina superior derechanave
 
-FIRE_GRAPH: EQU $91 ; grafico disparo
-FIRE_TOP_T: EQU COR_Y ; posicion superior disparo
+
+FIRE_GRAPH: EQU $91     ;Codigo de caracter del disparo
+FIRE_TOP_T: EQU COR_Y   ; limite superior disparo
+
+; Topes de los enemigos
+ENEMY_TOP_T:   EQU COR_Y - MIN_Y       ; limite superior
+ENEMY_TOP_B:   EQU COR_Y - MAX_Y + $01 ; limite inferior
+ENEMY_TOP_L:   EQU COR_X - MIN_X       ; limite izquierda
+ENEMY_TOP_R:   EQU COR_X - MAX_X       ; limite derecha
