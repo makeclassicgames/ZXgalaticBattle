@@ -55,3 +55,50 @@ ld      (ATTR_T), a     ; Carga los atributos actuales
 exx                     ; Recupera el valor de BC, DE y HL
 
 ret
+
+; rutina de cambio de colores de pantalla (usa registro a)
+cla:
+ld hl,$5800     ;HL= primera direccion atributos
+ld (hl), a      ; Cargamos atributos
+ld  de, $5801   ; DE= Segunda direccion atributos
+ld  bc, $02ff   ; BC= posiciones a cambiar
+ldir            ;copiamos datos
+
+ret
+
+; efecto de desvanecimiento de la pantalla
+; altera el valor de los registros AF,BC,DE,HL
+FadeScreen:
+ld  b,$08   ; bucle exterior se repite 8 veces
+FadeScreen_loop1:
+ld hl,$4000 ; Inicio area de video
+ld de,$1000 ; longitud area video
+FadeScreen_loop2:
+ld  a,(hl)  ;a byte apuntado por HL
+or a
+jr z, FadeScreen_cont ; si no hay finaliza
+bit $00,l   ;direccion HL par
+jr z,FadeScreen_right
+rla
+jr  FadeScreen_cont
+
+FadeScreen_right:
+rra ;rotar a la derecha
+
+FadeScreen_cont:
+ld  (hl),a ;actualiza posicion video A
+inc hl  ;siguiente posicion
+dec de  ;decrementar de
+ld  a,d ; copiar d en a
+or a
+jr nz, FadeScreen_loop2 ; si no es 0, volver al bucle interno
+
+ld a,b  ; copiar b en A
+dec a   ; decrementar A
+push bc ;guardar bc
+call cla    ;cambiar color
+pop bc  ;reestablecer bc
+djnz    FadeScreen_loop1 ; si no ha acabado, continuar hasta que b =0
+ret
+
+

@@ -212,8 +212,10 @@ res $07, (hl)   ;obtenemos el byte 7 almacenado en hl para saber posicion
 ld b,d          ; carga d en b
 ld c,e          ; carga e en c
 call DeleteChar ; borramos caracter en la posicion del enemigo
-ld hl,enemiesCounter    ; cargamos contador
-dec (hl)    ;decrementamos contador
+ld hl,(enemiesCounter)    ; cargamos contador
+dec a    ;decrementamos contador
+daa      ; actualiza memoria
+ld (enemiesCounter),a
 ret         ;salir
 CheckCrashFire_endLoop:
 inc hl      ;siguiente enemigo
@@ -223,7 +225,7 @@ ret
 
 ;change level
 changeLevel:
-ld a,(levelCounter) ;cargamos el contador de nivel
+ld a,(levelCounter+1) ;cargamos el contador de nivel
 inc a       ; incrementamos el nivel
 cp $1f      ; comparamos con 1f
 jr c, changeLevel_end   ; si hay acarreo quiere decir que hemos llegado al final
@@ -232,8 +234,8 @@ ld a, $01   ; cargamos el valor 01
 changeLevel_end:
 ld (levelCounter),a ; almacenamos en el contador el nuevo valor de a
 call LoadUdgsEnemies    ;cargamos los siguientes enemigos
-ld a,$14    ;inicializamos los enemigos
-ld (enemiesCounter),a   ;almacenamos el nuevo valor del contador
+ld a,$20    ;inicializamos los enemigos
+ld (enemiesCounter+1),a   ;almacenamos el nuevo valor del contador
 ld hl,enemiesConfigIni  ;cargamos la nueva configuracion de nuevo
 ld de, enemiesConfig    ;cargamos en de la direccion de la configuracion
 ld bc, enemiesConfigEnd-enemiesConfigIni ; numero de bytes a cargar
@@ -263,8 +265,10 @@ cp e        ; comparamos con e
 jr nz, checkCrashShip_Endloop   ;si no es 0, vamos al final
 dec hl      ;decrementamos hl (ir al primer byte)
 res $07,(hl)    ; establecemos el bit 7
-ld hl, enemiesCounter   ;cargamos el contador de enemigos
-dec (hl)    ; decrementamos el contador
+ld a, (enemiesCounter)   ;cargamos el contador de enemigos
+dec a    ; decrementamos el contador
+daa      ; ajuste decimal
+ld (enemiesCounter), a ; actualiza memoria
 jp PrintExplosion   ;mostramos la explosion
 checkCrashShip_Endloop:
 inc hl  ;incrementamos hl para ir al siguiente enemigo

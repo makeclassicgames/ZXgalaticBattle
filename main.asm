@@ -32,6 +32,7 @@ or      $07
 ld      (BORDCR), a
 
 ; pintar frame y nave
+call    FadeScreen
 call    PrintFrame
 call    PrintInfoGame
 call    PrintShip

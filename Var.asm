@@ -10,10 +10,10 @@ infoGame_end:
 ; Informacion partida
 ;contador enemigos
 enemiesCounter:
-db $14
+db $20
 ;contador de nivel
 levelCounter:
-db $01
+db $01,$01
 
 ; -----------------------------------------------------------------------------
 ; Declaraciones de los gráficos de los distintos personajes
