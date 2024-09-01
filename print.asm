@@ -88,7 +88,6 @@ ret
 ; -----------------------------------------------------------------------------
 PrintFrame:
 ld      hl, frameTopGraph       ; Carga en HL la dirección de la parte superior
-ld      b, frameBottomGraph - frameTopGraph ; Carga en B la longutid
 call    PrintString             ; Pinta la cadena
 
 ld      hl, frameBottomGraph    ; Carga en HL la dirección de la parte inferior
@@ -122,7 +121,6 @@ PrintInfoGame:
 ld      a, $01          ; Carga 1 en A
 call    OPENCHAN        ; Activa el canal 1, línea de comando
 ld      hl, infoGame    ; Carga la dirección de la cadena de títulos en HL
-ld      b, infoGame_end - infoGame  ; Carga la longitud en B
 call    PrintString     ; Pinta la cadena de títulos
 ld      a, $02          ; Carga 2 en A
 call    OPENCHAN        ; Activa el canal 2, pantalla superior
@@ -154,9 +152,11 @@ ret
 ; -----------------------------------------------------------------------------
 PrintString:
 ld      a, (hl)         ; Carga en A el carácter a pintar
-rst     $10             ; Pinta el carácter
-inc     hl              ; Apunta HL al siguiente carácter
-djnz    PrintString     ; Hasta que B valga 0
+cp     $ff              ; compara si es $ff
+ret z                   ; en caso de 0, salir
+rst $10                 ; imprimir caracter
+inc hl                  ; siguiente caracter
+jr    PrintString     ; vuelve a llamar a la rutina (recursividad)
 
 ret
 ;mostrar explosion
@@ -195,7 +195,7 @@ and $0f
 add a,'0'
 rst $10
 ret
-
+;pintar valores con informacion
 printInfoValue:
 ld a,$01
 call OPENCHAN
@@ -226,3 +226,63 @@ ld a,$02
 call OPENCHAN
 
 ret
+; -----------------------------------------------------------------------------
+; Pantalla de presentación y selección de controles.
+;
+; Altera el valor de los registros AF y HL.
+; -----------------------------------------------------------------------------
+PrintFirstScreen:
+call    CLS                 ; Limpia la pantalla
+ld      hl, title           ; Carga en HL la definición del título
+call    PrintString         ; Pinta el título
+ld      hl, firstScreen     ; Carga en HL la definición de la pantalla
+call    PrintString         ; Pinta la pantalla
+
+printFirstScreen_op:
+ld      a, $f7              ; Cara en A la semifila 1-5
+in      a, ($fe)            ; Lee el teclado
+bit     $00, a              ; Comprueba si se ha pulsado el 1
+jr      nz, printFirstScreen_op  ; Si no se ha pulsado, sigue hasta que se pulse
+call    FadeScreen          ; Fundido de pantalla
+
+ret
+
+; -----------------------------------------------------------------------------
+; Pantalla de fin de partida.
+;
+; Entrada:  A -> Tipo de fin, 0 = Game Over, !0 = Win.
+;
+; Altera e vakir de los registros AF y HL.
+; -----------------------------------------------------------------------------
+PrintEndScreen:
+push    af                      ; Preserva el valo de AF
+call    FadeScreen              ; Fundido de pantalla
+ld      hl, title               ; Apunta HL al título
+call    PrintString             ; Pinta el título
+pop     af                      ; Recupera el valor de AF
+or      a                       ; Evalúa si A vale 0
+jr      nz, printEndScreen_Win  ; Si no vale 0, salta
+
+printEndScreen_GameOver:
+ld      hl, gameOverScreen      ; Apunta HL a la pantalla de Game Over
+call    PrintString             ; La pinta
+jr      printEndScreen_WaitKey  ; Salta a esperar pulsación de Enter
+
+printEndScreen_Win:
+ld      hl, winScreen           ; Apunta HL a la pantalla de Win
+call    PrintString             ; La pinta
+
+printEndScreen_WaitKey:
+ld      hl, pressEnter          ; Apunta HL a la cadena 'Pulse Enter'
+call    PrintString             ; La pinta
+call    PrintInfoGame           ; Pinta los títulos de información de la partida
+call    printInfoValue          ; Pinta los datos de la partida
+
+printEndScreen_WaitKeyLoop:
+ld      a, $bf                  ; Carga a semifila 1-5 en A
+in      a, ($fe)                ; Lee el teclado
+rra                             ; Rota A a la derecha para ver estado del uno
+jr      c, printEndScreen_WaitKeyLoop   ; Si hay acarreo no se ha pulsado, bucle
+call    FadeScreen              ; Fundido de pantalla
+
+ret 

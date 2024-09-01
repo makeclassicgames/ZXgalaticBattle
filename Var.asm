@@ -1,9 +1,43 @@
+; Pantalla de inicio y titulo
+title:
+db  $10, $02, $16, $00, $08, "BATALLA ESPACIAL", $0d, $0d, $0d, $ff
+
+firstScreen:
+db  $10, $06, "Las naves alienigenas atacan la", $0d
+db  "Tierra, el futuro depende de ti.", $0d, $0d
+db  "Destruye todos los enemigos que", $0d
+db  "puedas, y protege el planeta.", $0d, $0d, $0d
+db  $10, $03, "Z - Izquierda", $16, $0a, $15,"X - Derecha"
+db  $16, $0c, $0b, "V - Disparo", $0d, $0d
+db  $10, $04, "1 - Teclado       3 - Sinclair 1", $0d, $0d
+db  "2 - Kempston      4 - Sinclair 2", $0d, $0d, $0d
+db $10, $05, "Apunta, dispara, esquiva a las", $0d 
+db "naves enemigas, vence y libera", $0d
+db "al planeta de la amenza." 
+db  $ff
+
+gameOverScreen:
+db  $10, $06, "Has perdido todas tus naves, no", $0d
+db  "has podido salvar la Tierra.", $0d, $0d
+db  "El planeta ha sido invadido por", $0d
+db  "los aliengenas.", $0d, $0d
+db  "Puedes volver a intentarlo, de", $0d
+db  "ti depende salvar la Tierra.", $ff
+
+winScreen:
+db  $10, $06, "Enhorabuena, has destruido a los"
+db  "alienigenas, salvaste la Tierra.", $0d, $0d
+db  "Los habitantes del planeta te", $0d
+db  "estaran eternamente agradecidos.", $ff
+
+pressEnter:
+db  $10, $04, $16, $10, $03, "Pulsa Enter para continuar", $ff
 ; -----------------------------------------------------------------------------
 ; Título de información de la partida
 ; -----------------------------------------------------------------------------
 infoGame:
 db  $10, $03, $16, $00, $00
-db 'Vidas   Puntos   Nivel  Enemigos'
+db 'Vidas   Puntos   Nivel  Enemigos',$ff
 infoGame_end:
 
 ;------------------------------------------------------------------------------
@@ -43,10 +77,10 @@ dw $0000
 ; -----------------------------------------------------------------------------
 frameTopGraph:
 db $16, $00, $00, $10, $01
-db $96, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $98
+db $96, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $98,$ff
 frameBottomGraph:
 db $16, $14, $00
-db $9b, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9d
+db $9b, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9d,$ff
 frameEnd:
 
 ; -----------------------------------------------------------------------------
