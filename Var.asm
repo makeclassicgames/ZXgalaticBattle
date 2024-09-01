@@ -15,6 +15,12 @@ db $20
 levelCounter:
 db $01,$01
 
+;Informacion a mostrar
+livesCounter:
+db $05
+pointsCounter:
+db $0000
+
 ; -----------------------------------------------------------------------------
 ; Declaraciones de los gráficos de los distintos personajes
 ; y la configuración de coordenadas (Y, X)

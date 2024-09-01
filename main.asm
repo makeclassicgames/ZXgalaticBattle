@@ -27,8 +27,8 @@ call    CLS
 xor     a
 out     ($fe), a
 ld      a, (BORDCR)
-and     $c7
-or      $07
+and     $c0
+or      $05
 ld      (BORDCR), a
 
 ; pintar frame y nave
@@ -36,7 +36,7 @@ call    FadeScreen
 call    PrintFrame
 call    PrintInfoGame
 call    PrintShip
-
+call    printInfoValue
 ;activar las interrupciones
 di
 ld      a, $28
@@ -65,7 +65,7 @@ jr z, Main_restart  ; si es 0 se reinicia la pantalla
 ;mover la nave y enemigos
 call    MoveShip
 call    MoveEnemies
-call    checkCrashShip ; comprobar colision nave
+;call    checkCrashShip ; comprobar colision nave
 jr      Main_loop
 
 ;reinicio de pantalla

@@ -214,8 +214,18 @@ ld c,e          ; carga e en c
 call DeleteChar ; borramos caracter en la posicion del enemigo
 ld hl,(enemiesCounter)    ; cargamos contador
 dec a    ;decrementamos contador
-daa      ; actualiza memoria
-ld (enemiesCounter),a
+daa      ; ajuste decimal
+ld (enemiesCounter),a ;actualiza la memoria
+ld a,(pointsCounter) ;Obtenemos los puntos actuales
+add a,$05            ;aumentamos 5 puntos
+daa                  ;ajuste decimal
+ld  (pointsCounter),a ;actualizar memoria
+ld a,(pointsCounter)  ;cargamos en a de nuevo
+ld a, (pointsCounter+1) ; centenas y ud millar
+adc a,$00               ; a=a+0 con acarreo
+daa                    ;ajuste decimal
+ld (pointsCounter+1),a ;actualizar en memoria segundo byte
+call printInfoValue ;actualizar puntos
 ret         ;salir
 CheckCrashFire_endLoop:
 inc hl      ;siguiente enemigo
@@ -269,6 +279,11 @@ ld a, (enemiesCounter)   ;cargamos el contador de enemigos
 dec a    ; decrementamos el contador
 daa      ; ajuste decimal
 ld (enemiesCounter), a ; actualiza memoria
+ld a,(livesCounter) ;carga contador vidas
+dec a   ; quitar una vida
+daa     ;ajuste decimal
+ld (livesCounter),a ; actualizar memoria contador
+call printInfoValue ;actualizar pantalla
 jp PrintExplosion   ;mostramos la explosion
 checkCrashShip_Endloop:
 inc hl  ;incrementamos hl para ir al siguiente enemigo
