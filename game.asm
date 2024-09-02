@@ -291,3 +291,11 @@ inc hl  ;incrementamos hl para ir al siguiente enemigo
 djnz checkCrashShip_loop ; en caso de no haber terminado, volver al bucle
 
 ret
+
+; ESpera 25 interrupciones
+sleep:
+ld  b,$19
+sleep_loop:
+halt
+djnz    sleep_loop
+ret

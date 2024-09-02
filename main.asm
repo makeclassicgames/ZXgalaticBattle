@@ -62,6 +62,7 @@ call    printInfoValue
 ;cargamos los enemigos y los pintamos
 call    LoadUdgsEnemies
 call    PrintEnemies
+call    sleep
 
 ;bucle principal
 Main_loop:
@@ -97,6 +98,8 @@ call    PrintFrame
 call    PrintInfoGame
 call    PrintShip
 call    printInfoValue
+call    PrintEnemies
+call    sleep
 jr Main_loop
 
 GameOver:

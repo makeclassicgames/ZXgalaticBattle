@@ -1,3 +1,6 @@
+; controles
+controls:
+db $00
 ; Pantalla de inicio y titulo
 title:
 db  $10, $02, $16, $00, $08, "BATALLA ESPACIAL", $0d, $0d, $0d, $ff

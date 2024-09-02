@@ -241,8 +241,22 @@ call    PrintString         ; Pinta la pantalla
 printFirstScreen_op:
 ld      a, $f7              ; Cara en A la semifila 1-5
 in      a, ($fe)            ; Lee el teclado
-bit     $00, a              ; Comprueba si se ha pulsado el 1
-jr      nz, printFirstScreen_op  ; Si no se ha pulsado, sigue hasta que se pulse
+ld      b,$01               ; opcion teclado
+rra
+jr nc, printFirstScreen_end ; si no hay acarreo ir a final
+inc b                       ; incrementar b
+rra
+jr nc, printFirstScreen_end ; acarreo? ir al final
+inc b                       ; incrementar b
+rra                         ; rotar
+jr nc, printFirstScreen_end ; si acarreo ir al final (sinclair 2)
+inc b                       ; incrementar B 
+rra                         ; rotar
+jr c, printFirstScreen_op   ; si no se ha pulsado salir en caso contrario 4
+
+printFirstScreen_end:
+ld a,b                      ; copiar b en a
+ld (controls),a             ; almacenar opcion teclado
 call    FadeScreen          ; Fundido de pantalla
 
 ret
