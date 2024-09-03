@@ -1,25 +1,77 @@
 ; -----------------------------------------------------------------------------
+; Pantallas de inicio y fin de partida.
+; -----------------------------------------------------------------------------
+title:
+db  $10, $02, $16, $00, $08, "BATALLA ESPACIAL", $0d, $0d, $ff
+
+firstScreen:
+db  $10, $06, "Las naves alienigenas atacan la", $0d
+db  "Tierra, el futuro depende de ti.", $0d, $d
+db  "Destruye todos los enemigos que", $0d
+db  "puedas, y protege el planeta.", $0d, $0d
+db  $10, $03, "Z - Izquierda", $16, $08, $15,"X - Derecha"
+db  $0d, $0d, "V - Disparo", $16, $0a, $15, "M - Sonido", $0d, $0d
+db  $10, $04, "1 - Teclado       3 - Sinclair 1", $0d, $0d
+db  "2 - Kempston      4 - Sinclair 2", $0d, $0d
+db  $10, $07, $16, $10, $07, "5 - Dificultad ", $0d, $0d
+db  $10, $05, "Apunta, dispara, esquiva a las", $0d 
+db "naves enemigas, vence y libera", $0d
+db "al planeta de la amenza." 
+db  $ff
+
+gameOverScreen:
+db  $10, $06, "Has perdido todas tus naves, no", $0d
+db  "has podido salvar la Tierra.", $0d, $0d
+db  "El planeta ha sido invadido por", $0d
+db  "los aliengenas.", $0d, $0d
+db  "Puedes volver a intentarlo, de", $0d
+db  "ti depende salvar la Tierra.", $ff
+
+winScreen:
+db  $10, $06, "Enhorabuena, has destruido a los"
+db  "alienigenas, salvaste la Tierra.", $0d, $0d
+db  "Los habitantes del planeta te", $0d
+db  "estaran eternamente agradecidos.", $ff
+
+pressEnter:
+db  $10, $04, $16, $10, $03, "Pulsa Enter para continuar", $ff
+
+; -----------------------------------------------------------------------------
 ; Título de información de la partida
 ; -----------------------------------------------------------------------------
 infoGame:
 db  $10, $03, $16, $00, $00
-db 'Vidas   Puntos   Nivel  Enemigos'
-infoGame_end:
+db 'Vidas   Puntos   Nivel  Enemigos', $ff
 
-;------------------------------------------------------------------------------
-; Informacion partida
-;contador enemigos
+; -----------------------------------------------------------------------------
+; Información de la partida
+; -----------------------------------------------------------------------------
+controls:
+db  $00
 enemiesCounter:
-db $20 ;BCD
-;contador de nivel
+db  $20
+; Byte 1: cotrolador de nivel, Byte 2: para pintar el número de nivel
 levelCounter:
-db $01,$01 ;BCD
-
-; livesCounter
+db  $01, $01
 livesCounter:
-db $05 ; BCD
+db  $05
 pointsCounter:
-db $0000
+dw  $0000
+extraCounter:
+dw  $0000
+; -----------------------------------------------------------------------------
+; Valores auxiliares
+; -----------------------------------------------------------------------------
+swEnemies:
+db  $00
+enemiesColor:
+db  $06
+enemiesTopB:
+db  ENEMY_TOP_B
+firesTop:
+db  FIRES
+hardness:
+db  $03
 
 ; -----------------------------------------------------------------------------
 ; Declaraciones de los gráficos de los distintos personajes
@@ -30,24 +82,22 @@ db $0000
 ; Nave
 ; -----------------------------------------------------------------------------
 shipPos:
-dw $0511
-
+dw  $0511
 ; -----------------------------------------------------------------------------
 ; Disparo
 ; -----------------------------------------------------------------------------
 firePos:
-dw $0000
+dw  $0000
 
 ; -----------------------------------------------------------------------------
 ; Marco de la pantalla
 ; -----------------------------------------------------------------------------
 frameTopGraph:
 db $16, $00, $00, $10, $01
-db $96, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $98
+db $96, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $97, $98, $ff
 frameBottomGraph:
 db $16, $14, $00
-db $9b, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9d
-frameEnd:
+db $9b, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9d, $ff
 
 ; -----------------------------------------------------------------------------
 ; Gráficos de los enemigos
@@ -85,6 +135,23 @@ db $8d, $9d, $8d, $97, $8d, $91, $8d, $8b, $8d, $85
 enemiesConfigEnd:
 
 ; -----------------------------------------------------------------------------
+; Configuración de los disparos de los enemigos
+;
+; 2 bytes por disparo.
+; -----------------------------------------------------------------------------
+; Byte 1                        | Byte 2
+; -----------------------------------------------------------------------------
+; Bit 0-4:  Posición Y          | Bit 0-4:  Posición X
+; Bit 5:    Libre               | Bit 5:    Libre
+; Bit 6:    Libre               | Bit 6:    Libre
+; Bit 7:	Activo 1/0          | Bit 7:    Libre
+; -----------------------------------------------------------------------------
+enemiesFire:
+defs FIRES * $02
+enemiesFireCount:
+db $00
+
+; -----------------------------------------------------------------------------
 ; Declaración de los gráficos generales
 ; -----------------------------------------------------------------------------
 udgsCommon:
@@ -102,7 +169,7 @@ db $35, $37, $35, $37, $35, $37, $35, $37	; $9a Lateral derecha
 db $ee, $af, $e7, $b3, $f8, $df, $75, $3f	; $9b Esquina inferior izquierda
 db $00, $00, $ff, $ff, $00, $ff, $55, $ff	; $9c Horizontal inferior
 db $75, $f7, $e5, $cf, $1d, $ff, $56, $fc	; $9d Esquina inferior derecha
-db $00, $00, $00, $00, $00, $00, $00, $00	; $9e Blanco
+db $00, $3c, $2c, $2c, $2c, $2c, $18, $00	; $9e Disparo enemigo
 
 udgsExtension:
 db $00, $00, $00, $00, $00, $00, $00, $00	; $9f Left/Up
@@ -289,3 +356,58 @@ db $e0, $ff, $ed, $5b, $7e, $6e, $5f, $72	; $9f Left/Up
 db $07, $ff, $b7, $da, $7e, $76, $fa, $4e	; $a0 Rigth/Up
 db $72, $5f, $6e, $7e, $5b, $ed, $ff, $e0	; $a1 Left/Down
 db $4e, $fa, $76, $7e, $da, $b7, $ff, $07	; $a2 Rigth/Down
+
+; -----------------------------------------------------------------------------
+; Datos necesarios para la música.
+; -----------------------------------------------------------------------------
+
+; -----------------------------------------------------------------------------
+; Siguiente nota
+; -----------------------------------------------------------------------------
+ptrSound:
+dw  $0000
+
+; -----------------------------------------------------------------------------
+; Canciones
+; -----------------------------------------------------------------------------
+Song_1:
+dw  $ff0c
+dw  G_2_f, G_2, G_2_f, G_2, G_2_f, G_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2
+dw  G_2_f, G_2, G_2_f, G_2, G_2_f, G_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2
+dw  D_3_f, D_3, D_3_f, D_3, D_3_f, D_3, Ds_3_f, Ds_3, As_2_f, As_2, Fs_2_f, Fs_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2
+
+dw  G_3_f, G_3, G_2_f, G_2, G_2_f, G_2, G_3_f, G_3, Fs_3_f, Fs_3, F_3_f, F_3, E_3_f, E_3, Ds_3_f, Ds_3, E_3_f, E_3
+dw  Gs_2_f, Gs_2, Cs_3_f, Cs_3, C_3_f, C_3, B_2_f, B_2, As_2_f, As_2, A_2_f, A_2, As_2_f, As_2
+dw  Ds_2_f, Ds_2, Fs_2_f, Fs_2, Ds_2_f, Ds_2, Fs_2_f, Fs_2, As_2_f, As_2, G_2_f, G_2, As_2_f, As_2, D_3_f, D_3
+
+dw  G_3_f, G_3, G_2_f, G_2, G_2_f, G_2, G_3_f, G_3, Fs_3_f, Fs_3, F_3_f, F_3, E_3_f, E_3, Ds_3_f, Ds_3, E_3_f, E_3
+dw  Gs_2_f, Gs_2, Cs_3_f, Cs_3, C_3_f, C_3, B_2_f, B_2, As_2_f, As_2, A_2_f, A_2, As_2_f, As_2
+dw  Ds_2_f, Ds_2, Fs_2_f, Fs_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2, A_2_f, A_2, G_2_f, G_2
+
+dw  G_2_f, G_2, G_2_f, G_2, G_2_f, G_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2
+dw  G_2_f, G_2, G_2_f, G_2, G_2_f, G_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2, Ds_2_f, Ds_2, As_2_f, As_2, G_2_f, G_2
+
+Song_2:
+dw  $ff05
+dw  D_4_f, D_4, D_4_f, D_4, D_4_f, D_4, G_4_f, G_4, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_5_f, G_5, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_5_f, G_5, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, C_5_f, C_5, A_4_f, A_4
+
+dw  D_4_f, D_4, D_4_f, D_4, D_4_f, D_4, G_4_f, G_4, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_5_f, G_5, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_5_f, G_5, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, C_5_f, C_5, A_4_f, A_4
+
+dw  D_4_f, D_4, D_4_f, D_4, E_4_f, E_4, E_4_f, E_4, C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_4_f, G_4, G_4_f, G_4, A_4_f, A_4, B_4_f, B_4, A_4_f, A_4, E_4_f, E_4, Fs_4_f, Fs_4
+dw  D_4_f, D_4, D_4_f, D_4, E_4_f, E_4, E_4_f, E_4, C_5_f, C_5, C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_4_f, G_4, D_5_f, D_5, D_5_f, D_5, A_4_f, A_4
+dw  D_4_f, D_4, D_4_f, D_4, E_4_f, E_4, E_4_f, E_4, C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_4_f, G_4, G_4_f, G_4, A_4_f, A_4, B_4_f, B_4, A_4_f, A_4, E_4_f, E_4, Fs_4_f, Fs_4
+
+dw  D_5_f, D_5, D_5_f, D_5, G_5_f, G_5, F_5_f, F_5, Ds_5_f, Ds_5, D_5_f, D_5, C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_4_f, G_4, D_5_f, D_5
+
+dw  D_4_f, D_4, D_4_f, D_4, D_4_f, D_4, G_4_f, G_4, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_5_f, G_5, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, A_4_f, A_4, G_5_f, G_5, D_5_f, D_5
+dw  C_5_f, C_5, B_4_f, B_4, C_5_f, C_5, A_4_f, A_4
+
+dw  $0000
