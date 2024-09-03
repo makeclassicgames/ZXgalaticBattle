@@ -1,6 +1,6 @@
 # ZX Batalla Galáctica
 
-Videojuego para ZX Spectrum (compatible con 16k), realizado en ensamblador; basado en el libro _Ensamblador para ZX Spectrum ¿Hacemos un juego? de Juan Antonio Rubio Garcia_.
+Videojuego para ZX Spectrum (compatible con 16k), realizado en ensamblador; basado en el libro _[Ensamblador para ZX Spectrum ¿Hacemos un juego? de Juan Antonio Rubio Garcia](https://amzn.eu/d/hSCQkxz)_.
 
 ![Captura desde 2024-09-03 19-28-14](https://github.com/user-attachments/assets/10b3124d-b0bc-44fc-8ef0-c2320cecb227)
 
