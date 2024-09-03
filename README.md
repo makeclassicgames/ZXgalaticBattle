@@ -24,3 +24,5 @@ Puedes encontrar una rom en el apartado de releases.
 Puedes encontrar un fichero Makefile o make.bat (windows) para generar la rom.
 
 Requiere el software _[pasmo](https://pasmo.speccy.org/)_.
+
+Puedes ejecutar la ROM en un ZX Spectrum Real, o utilizar un emulador como [ZesarUX](https://github.com/chernandezba/zesarux).
