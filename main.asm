@@ -27,14 +27,16 @@ call    CLS
 xor     a
 out     ($fe), a
 ld      a, (BORDCR)
-and     $c7
-or      $07
+and     $c0
+or      $05
 ld      (BORDCR), a
 
 ; pintar frame y nave
+call    fadeScreen
 call    PrintFrame
 call    PrintInfoGame
 call    PrintShip
+call    printInfoValue
 
 ;activar las interrupciones
 di

@@ -212,7 +212,21 @@ res $07, (hl)   ;obtenemos el byte 7 almacenado en hl para saber posicion
 ld b,d          ; carga d en b
 ld c,e          ; carga e en c
 call DeleteChar ; borramos caracter en la posicion del enemigo
-ld hl,enemiesCounter    ; cargamos contador
+
+ld hl,(enemiesCounter)    ; cargamos contador
+dec a   ;decrementar a
+daa 
+ld (enemiesCounter),a
+ld a, (pointsCounter)
+add a,$05
+daa
+ld (pointsCounter),a
+ld a,(pointsCounter)
+ld a,(pointsCounter+1)
+add a,$00
+daa
+ld (pointsCounter+1),a
+call printInfoValue
 dec (hl)    ;decrementamos contador
 ret         ;salir
 CheckCrashFire_endLoop:
@@ -223,7 +237,7 @@ ret
 
 ;change level
 changeLevel:
-ld a,(levelCounter) ;cargamos el contador de nivel
+ld a,(levelCounter+1) ;cargamos el contador de nivel
 inc a       ; incrementamos el nivel
 cp $1f      ; comparamos con 1f
 jr c, changeLevel_end   ; si hay acarreo quiere decir que hemos llegado al final
@@ -232,8 +246,8 @@ ld a, $01   ; cargamos el valor 01
 changeLevel_end:
 ld (levelCounter),a ; almacenamos en el contador el nuevo valor de a
 call LoadUdgsEnemies    ;cargamos los siguientes enemigos
-ld a,$14    ;inicializamos los enemigos
-ld (enemiesCounter),a   ;almacenamos el nuevo valor del contador
+ld a,$20    ;inicializamos los enemigos
+ld (enemiesCounter+1),a   ;almacenamos el nuevo valor del contador
 ld hl,enemiesConfigIni  ;cargamos la nueva configuracion de nuevo
 ld de, enemiesConfig    ;cargamos en de la direccion de la configuracion
 ld bc, enemiesConfigEnd-enemiesConfigIni ; numero de bytes a cargar

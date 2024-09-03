@@ -32,3 +32,10 @@ ENEMY_TOP_T:   EQU COR_Y - MIN_Y       ; limite superior
 ENEMY_TOP_B:   EQU COR_Y - MAX_Y + $01 ; limite inferior
 ENEMY_TOP_L:   EQU COR_X - MIN_X       ; limite izquierda
 ENEMY_TOP_R:   EQU COR_X - MAX_X       ; limite derecha
+
+; limites contador
+
+COR_ENEMY: EQU $1705
+COR_LEVEL: EQU $170d
+COR_LIVE: EQU $171e
+COR_POINT: EQU $1717

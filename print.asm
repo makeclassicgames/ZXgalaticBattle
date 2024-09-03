@@ -180,3 +180,43 @@ inc e           ; incrementar e (siguiente animacion)
 dec d           ; decrementar d
 jr nz, PrintExplosion_loop  ; si no es 0, continuar bucle
 jp PrintShip    ; volver a imprimir nave
+
+; print BCD: imprime numero en BCD
+printBCD:
+ld a,(hl)
+and $f0
+rra
+rra
+rra
+rra
+add a,'0'
+rst $10
+ld a,(hl)
+and $0f
+add a,'0'
+rst $10
+ret
+
+printInfoValue:
+ld a,$01
+call OPENCHAN
+ld bc, COR_LIVE
+call At
+ld hl, livesCounter
+call printBCD
+ld bc, COR_POINT
+call At
+ld hl, pointsCounter+1
+call printBCD
+ld bc, COR_LEVEL
+call At
+ld hl, levelCounter+1
+call printBCD
+ld bc, COR_ENEMY
+call At
+ld hl, enemiesCounter
+call printBCD
+ld a,$02
+call OPENCHAN
+
+ret

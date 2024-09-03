@@ -55,3 +55,46 @@ ld      (ATTR_T), a     ; Carga los atributos actuales
 exx                     ; Recupera el valor de BC, DE y HL
 
 ret
+
+; cambiar colores pantalla
+; esta rutina cambia los ateributos de color y
+; altera los registros AF, BC, DE y HL
+cla:
+ld  hl,$5800 ; direccion de atributos de color
+ld (hl),a    ; cargamos los atributos
+ld de ,$5801 ; segunda direccion
+ld bc, $02ff ; valores a establecer
+ldir         ; cambiar los atributos
+ret
+
+;fadeScreen: realiza efecto pantalla
+fadeScreen:
+ld  b,$00   ; cargar 00
+fadeScreen_loop1:
+ld  hl,$4000; inicio area video
+ld  de, $1000; longitud area video
+fadeScreen_loop2:
+ld a,(hl) ; carga valor video
+or a
+jr z, fadeScreen_cont
+bit $00,l 
+jr z, fadeScreen_right
+rla ; rotar izquierda
+jr fadeScreen_cont
+fadeScreen_right:
+rra ;rotar derecha
+fadeScreen_cont:
+ld (hl),a
+inc hl
+dec de
+ld a,d
+or a
+jr nz,fadeScreen_loop2
+ld a,b
+dec a
+push bc
+call cla
+pop bc
+djnz fadeScreen_loop1
+ret
+
