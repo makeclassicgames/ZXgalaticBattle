@@ -19,3 +19,8 @@ Al inicio del juego pulsar la opción requerida.
 
 Puedes encontrar una rom en el apartado de releases.
 
+## Compilar y generar ROM
+
+Puedes encontrar un fichero Makefile o make.bat (windows) para generar la rom.
+
+Requiere el software _[pasmo](https://pasmo.speccy.org/)_.
