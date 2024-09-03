@@ -2,6 +2,7 @@
 
 Videojuego para ZX Spectrum (compatible con 16k), realizado en ensamblador; basado en el libro _Ensamblador para ZX Spectrum ¿Hacemos un juego? de Juan Antonio Rubio Garcia_.
 
+![Captura desde 2024-09-03 19-28-14](https://github.com/user-attachments/assets/10b3124d-b0bc-44fc-8ef0-c2320cecb227)
 
 
 En este repositorio pueden encontrarse tanto el código completamente comentado, como diferentes pasos para ir poco a poco implementandolo; para ello, revisar las diferentes ramas que puede encontrarse en el mismo.
